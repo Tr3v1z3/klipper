@@ -46,7 +46,8 @@ class BedTiltCalibrate:
         self.probe_z_offset = config.getfloat('probe_z_offset', 0.)
         self.z_position_endstop = None
         if config.has_section('stepper_z'):
-            self.z_position_endstop = config.getfloat('position_endstop', None)
+            zconfig = config.getsection('stepper_z')
+            self.z_position_endstop = zconfig.getfloat('position_endstop', None)
         self.manual_probe = config.getboolean('manual_probe', None)
         if self.manual_probe is None:
             self.manual_probe = not config.has_section('probe')
