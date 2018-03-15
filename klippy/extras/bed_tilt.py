@@ -97,17 +97,18 @@ class BedTiltCalibrate:
                     home_x, home_y = last_home_position[:2]
                     z_diff -= home_x * new_params['x_adjust']
                     z_diff -= home_y * new_params['y_adjust']
-                    z_extra = " (when homing at %.3f,%.3f)" % (home_x, home_y)
+                    z_extra = " (when Z homing at %.3f,%.3f)" % (home_x, home_y)
             z_adjust = "stepper_z position_endstop: %.6f%s\n" % (
                 self.z_position_endstop - z_diff, z_extra)
         else:
             # Delta (or other) style robot
             z_adjust = "Add %.6f to endstop position\n" % (-z_diff,)
+        msg = "%sx_adjust: %.6f y_adjust: %.6f" % (
+            z_adjust, new_params['x_adjust'], new_params['y_adjust'])
+        logging.info("bed_tilt_calibrate: %s", msg)
         self.gcode.respond_info(
-            "%sx_adjust: %.6f y_adjust: %.6f\n"
-            "To use these parameters, update the printer config file with\n"
-            "the above and then issue a RESTART command" % (
-                z_adjust, new_params['x_adjust'], new_params['y_adjust']))
+            "%s\nTo use these parameters, update the printer config file with\n"
+            "the above and then issue a RESTART command" % (msg,))
 
 def load_config(config):
     return BedTilt(config)
